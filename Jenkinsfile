@@ -1,37 +1,23 @@
-// pipeline {
-//     agent any
-//
-//     stages {
-//         stage('Checkout') {
-//             steps {
-//                 git branch: 'main',
-//                     url: 'https://github.com/vaibhav4222/Project1_OrangeHRM_Automation.git'
-//             }
-//         }
-//         stage('Install Dependencies') {
-//             steps {
-//                 bat 'pip install -r requirements.txt'
-//             }
-//         }
-//         stage('Run Tests') {
-//             steps {
-//                 bat 'pytest --alluredir=reports'
-//             }
-//         }
-//         stage('Publish Allure Report') {
-//             steps {
-//                 allure([
-//                     includeProperties: false,
-//                     jdk: '',
-//                     results: [[path: 'reports']]
-//                 ])
-//             }
-//         }
-//     }
-// }
+pipeline {
+    agent any
 
-stage('Publish Allure Report') {
-    steps {
-        allure includeProperties: false, jdk: '', results: [[path: 'reports']]
+    stages {
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/vaibhav4222/Project1_OrangeHRM_Automation.git', branch: 'master'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh 'pytest --alluredir=allure-results'
+            }
+        }
+
+        stage('Publish Allure Report') {
+            steps {
+                allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
+            }
+        }
     }
 }
